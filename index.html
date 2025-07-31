@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .grid-item {
+            visibility: hidden; /* Hide items initially for GSAP animation */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight">Friends Gallery</h1>
+            <p class="text-lg md:text-xl text-gray-400 mt-2">A dynamic collection of moments.</p>
+        </header>
+
+        <main>
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Gallery items will be injected here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Data for the gallery posts ---
+            const posts = [
+                { img: 'https://placehold.co/600x800/e2e8f0/333?text=Post+1', caption: 'Chilling by the beach.' },
+                { img: 'https://placehold.co/600x600/cbd5e1/333?text=Post+2', caption: 'Mountain adventures.' },
+                { img: 'https://placehold.co/600x800/94a3b8/fff?text=Post+3', caption: 'City lights at night.' },
+                { img: 'https://placehold.co/600x700/64748b/fff?text=Post+4', caption: 'A walk in the park.' },
+                { img: 'https://placehold.co/600x600/475569/fff?text=Post+5', caption: 'Delicious food.' },
+                { img: 'https://placehold.co/600x800/334155/fff?text=Post+6', caption: 'Art gallery visit.' },
+                { img: 'https://placehold.co/600x700/1e293b/fff?text=Post+7', caption: 'Cozy coffee shop.' },
+                { img: 'https://placehold.co/600x600/0f172a/fff?text=Post+8', caption: 'Exploring the streets.' },
+                { img: 'https://placehold.co/600x800/e2e8f0/333?text=Post+9', caption: 'Sunset view.' },
+                { img: 'https://placehold.co/600x700/cbd5e1/333?text=Post+10', caption: 'Winter wonderland.' },
+                { img: 'https://placehold.co/600x600/94a3b8/fff?text=Post+11', caption: 'Summer festival.' },
+                { img: 'https://placehold.co/600x800/64748b/fff?text=Post+12', caption: 'Road trip memories.' },
+            ];
+
+            const galleryGrid = document.getElementById('gallery-grid');
+
+            // --- Dynamically create and add gallery items to the DOM ---
+            posts.forEach(post => {
+                const item = document.createElement('div');
+                item.className = 'grid-item group relative overflow-hidden rounded-lg shadow-lg';
+                
+                item.innerHTML = `
+                    <img src="${post.img}" alt="${post.caption}" class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/600x800/333/fff?text=Image+Not+Found';">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">${post.caption}</p>
+                    </div>
+                `;
+                galleryGrid.appendChild(item);
+            });
+
+            // --- GSAP Animations ---
+
+            // 1. Staggered fade-in animation for the grid
+            gsap.from(".grid-item", {
+                duration: 0.8,
+                opacity: 0,
+                y: 50,
+                stagger: 0.1,
+                ease: "power3.out",
+                onStart: () => {
+                    // Make items visible just before the animation starts
+                    gsap.set(".grid-item", { visibility: "visible" });
+                }
+            });
+
+            // 2. Hover animations are handled by CSS group-hover for simplicity and performance.
+            // GSAP could be used for more complex hover effects if needed.
+            // For example, a more complex GSAP hover animation:
+            const gridItems = document.querySelectorAll('.grid-item');
+            gridItems.forEach(item => {
+                const image = item.querySelector('img');
+                const caption = item.querySelector('.absolute > p');
+
+                const hoverTimeline = gsap.timeline({ paused: true });
+                hoverTimeline
+                    .to(image, { scale: 1.1, duration: 0.5, ease: 'power2.inOut' })
+                    .to(item.querySelector('.absolute'), { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, "-=0.5")
+                    .to(caption, { y: 0, duration: 0.3, ease: 'power2.inOut' }, "-=0.4");
+
+                item.addEventListener('mouseenter', () => hoverTimeline.play());
+                item.addEventListener('mouseleave', () => hoverTimeline.reverse());
+            });
+
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .grid-item {
+            visibility: hidden; /* Hide items initially for GSAP animation */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight">Friends Gallery</h1>
+            <p class="text-lg md:text-xl text-gray-400 mt-2">A dynamic collection of moments.</p>
+        </header>
+
+        <main>
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Gallery items will be injected here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Data for the gallery posts ---
+            const posts = [
+                { img: 'https://placehold.co/600x800/e2e8f0/333?text=Post+1', caption: 'Chilling by the beach.' },
+                { img: 'https://placehold.co/600x600/cbd5e1/333?text=Post+2', caption: 'Mountain adventures.' },
+                { img: 'https://placehold.co/600x800/94a3b8/fff?text=Post+3', caption: 'City lights at night.' },
+                { img: 'https://placehold.co/600x700/64748b/fff?text=Post+4', caption: 'A walk in the park.' },
+                { img: 'https://placehold.co/600x600/475569/fff?text=Post+5', caption: 'Delicious food.' },
+                { img: 'https://placehold.co/600x800/334155/fff?text=Post+6', caption: 'Art gallery visit.' },
+                { img: 'https://placehold.co/600x700/1e293b/fff?text=Post+7', caption: 'Cozy coffee shop.' },
+                { img: 'https://placehold.co/600x600/0f172a/fff?text=Post+8', caption: 'Exploring the streets.' },
+                { img: 'https://placehold.co/600x800/e2e8f0/333?text=Post+9', caption: 'Sunset view.' },
+                { img: 'https://placehold.co/600x700/cbd5e1/333?text=Post+10', caption: 'Winter wonderland.' },
+                { img: 'https://placehold.co/600x600/94a3b8/fff?text=Post+11', caption: 'Summer festival.' },
+                { img: 'https://placehold.co/600x800/64748b/fff?text=Post+12', caption: 'Road trip memories.' },
+            ];
+
+            const galleryGrid = document.getElementById('gallery-grid');
+
+            // --- Dynamically create and add gallery items to the DOM ---
+            posts.forEach(post => {
+                const item = document.createElement('div');
+                item.className = 'grid-item group relative overflow-hidden rounded-lg shadow-lg';
+                
+                item.innerHTML = `
+                    <img src="${post.img}" alt="${post.caption}" class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/600x800/333/fff?text=Image+Not+Found';">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <p class="text-white text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-in-out">${post.caption}</p>
+                    </div>
+                `;
+                galleryGrid.appendChild(item);
+            });
+
+            // --- GSAP Animations ---
+
+            // 1. Staggered fade-in animation for the grid
+            gsap.from(".grid-item", {
+                duration: 0.8,
+                opacity: 0,
+                y: 50,
+                stagger: 0.1,
+                ease: "power3.out",
+                onStart: () => {
+                    // Make items visible just before the animation starts
+                    gsap.set(".grid-item", { visibility: "visible" });
+                }
+            });
+
+            // 2. Hover animations are handled by CSS group-hover for simplicity and performance.
+            // GSAP could be used for more complex hover effects if needed.
+            // For example, a more complex GSAP hover animation:
+            const gridItems = document.querySelectorAll('.grid-item');
+            gridItems.forEach(item => {
+                const image = item.querySelector('img');
+                const caption = item.querySelector('.absolute > p');
+
+                const hoverTimeline = gsap.timeline({ paused: true });
+                hoverTimeline
+                    .to(image, { scale: 1.1, duration: 0.5, ease: 'power2.inOut' })
+                    .to(item.querySelector('.absolute'), { opacity: 1, duration: 0.3, ease: 'power2.inOut' }, "-=0.5")
+                    .to(caption, { y: 0, duration: 0.3, ease: 'power2.inOut' }, "-=0.4");
+
+                item.addEventListener('mouseenter', () => hoverTimeline.play());
+                item.addEventListener('mouseleave', () => hoverTimeline.reverse());
+            });
+
+        });
+    </script>
+</body>
+</html>
